@@ -67,7 +67,10 @@ const Images = ({ status }) => {
           </Spinner>
         </div>
       ) : (
-        <Row className="mx-auto my-auto justify-content-center">
+        <Row
+          className="mx-auto mt-5 justify-content-center"
+          style={{ marginBottom: "80px" }}
+        >
           {images.map((image, index) => (
             <Image
               key={index}
