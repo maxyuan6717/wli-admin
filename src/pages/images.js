@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getAll, getImage } from "../util/api";
 import Image from "../components/image";
 import { Row, Spinner } from "react-bootstrap";
@@ -15,7 +15,7 @@ const Images = ({ status }) => {
     return image;
   };
 
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     let files = await getAll(status);
     files = files.data;
 
@@ -46,12 +46,12 @@ const Images = ({ status }) => {
         setLoading(false);
       }
     });
-  };
+  }, [status]);
 
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
-    await fetchImages();
-  }, [status, rerender]);
+    fetchImages();
+  }, [status, rerender, fetchImages]);
 
   return (
     <div className="d-flex">
