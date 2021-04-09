@@ -20,6 +20,13 @@ const StyledImg = styled.img`
   margin: 20px 20px 0 20px;
 `;
 
+const StyledColor = styled.div`
+  height: 200px;
+  width: 175px;
+  border-radius: 12px;
+  margin: 20px 20px 0 20px;
+`;
+
 const StyledVoteBtn = styled.span`
   transition: color 0.2s;
   &:hover {
@@ -37,11 +44,15 @@ const StyledVoteBtn = styled.span`
   }
 `;
 
-const Image = ({ src, data, rerender, setRerender }) => {
+const Image = ({ src, color, data, rerender, setRerender }) => {
   const btn_size = 30;
   return (
     <StyledCard>
-      <StyledImg src={src} height={200} />
+      {src && !color ? (
+        <StyledImg src={src} height={200} />
+      ) : (
+        <StyledColor style={{ backgroundColor: color }} />
+      )}
       <Row className="mx-auto my-4 justify-content-center">
         <StyledVoteBtn
           className={`my-auto mx-4 up ${data.upvoted ? "upped" : ""}`}

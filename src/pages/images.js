@@ -31,9 +31,16 @@ const Images = ({ status }) => {
     // console.log(color_ids);
 
     if (!files.length) {
-      setLoading(false);
       setImages([]);
       setImageData([]);
+    }
+
+    if (!color_ids.length) {
+      setColorData([]);
+    }
+
+    if (!files.length && !color_ids.length) {
+      setLoading(false);
       return;
     }
 
@@ -112,6 +119,15 @@ const Images = ({ status }) => {
               key={index}
               src={`data:${imageData[index].contentType};base64,${image}`}
               data={imageData[index]}
+              rerender={rerender}
+              setRerender={setRerender}
+            />
+          ))}
+          {colorData.map((color, index) => (
+            <Image
+              key={index + images.length}
+              color={color.color}
+              data={color}
               rerender={rerender}
               setRerender={setRerender}
             />
