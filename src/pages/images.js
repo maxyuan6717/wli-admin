@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAll, getImage } from "../util/api";
+import { getAll, getColor, getImage } from "../util/api";
 import Image from "../components/image";
 import { Row, Spinner } from "react-bootstrap";
 
 const Images = ({ status }) => {
   const [images, setImages] = useState([]);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [imageData, setImageData] = useState([]);
+  const [colorData, setColorData] = useState([]);
+  const [loading, setLoading] = useState(0);
   const [rerender, setRerender] = useState(0);
 
   const fetchImage = async (filename) => {
@@ -15,14 +16,24 @@ const Images = ({ status }) => {
     return image;
   };
 
+  const fetchColor = async (id) => {
+    let color = await getColor(id);
+    return color;
+  };
+
   const fetchImages = useCallback(async () => {
-    let files = await getAll(status);
-    files = files.data;
+    let data = await getAll(status);
+    data = data.data;
+    const files = data.filenames;
+    const color_ids = data.color_ids;
+
+    // console.log(files);
+    // console.log(color_ids);
 
     if (!files.length) {
-      setLoading(false);
+      setLoading(0);
       setImages([]);
-      setData([]);
+      setImageData([]);
       return;
     }
 
@@ -37,25 +48,46 @@ const Images = ({ status }) => {
           contentType: fetchedImage.data.contentType,
           upvoted: fetchedImage.data.upvoted,
           downvoted: fetchedImage.data.downvoted,
+          tags: fetchedImage.data.tags,
+          caption: fetchedImage.data.caption,
           filename: file,
         });
       }
       if (fetched.length === files.length) {
-        setData(metadata.reverse());
+        setImageData(metadata.reverse());
         setImages(fetched.reverse());
-        setLoading(false);
+        setLoading(loading - 1);
+      }
+    });
+
+    let colors = [];
+
+    color_ids.forEach(async (id) => {
+      let fetchedColor = await fetchColor(id);
+      if (fetchedColor && fetchedColor.data) {
+        colors.push({
+          color: fetchedColor.data.color,
+          upvoted: fetchedColor.data.upvoted,
+          downvoted: fetchedColor.data.downvoted,
+          tags: fetchedColor.data.tags,
+          caption: fetchedColor.data.caption,
+        });
+      }
+      if (colors.length === color_ids.length) {
+        setColorData(colors);
+        setLoading(loading - 1);
       }
     });
   }, [status]);
 
   useEffect(() => {
-    setLoading(true);
+    setLoading(2);
     fetchImages();
   }, [status, rerender, fetchImages]);
 
   return (
     <div className="d-flex">
-      {loading ? (
+      {loading > 0 ? (
         <div className="d-flex" style={{ width: "100vw", height: "100vh" }}>
           <Spinner
             className="m-auto"
@@ -74,8 +106,8 @@ const Images = ({ status }) => {
           {images.map((image, index) => (
             <Image
               key={index}
-              src={`data:${data[index].contentType};base64,${image}`}
-              data={data[index]}
+              src={`data:${imageData[index].contentType};base64,${image}`}
+              data={imageData[index]}
               rerender={rerender}
               setRerender={setRerender}
             />

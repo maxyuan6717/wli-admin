@@ -15,8 +15,13 @@ export const getAll = async (status) => {
 };
 
 export const getImage = async (filename) => {
-  let image = await axios.post(`${Base}/image/get`, { filename });
+  let image = await axios.post(`${Base}/image/getImage`, { filename });
   return image;
+};
+
+export const getColor = async (id) => {
+  let color = await axios.post(`${Base}/image/getColor`, { id });
+  return color;
 };
 
 export const voteImg = async (filename, vote) => {
