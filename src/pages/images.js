@@ -7,7 +7,7 @@ const Images = ({ status }) => {
   const [images, setImages] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [colorData, setColorData] = useState([]);
-  const [loading, setLoading] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [rerender, setRerender] = useState(0);
 
   const fetchImage = async (filename) => {
@@ -31,7 +31,7 @@ const Images = ({ status }) => {
     // console.log(color_ids);
 
     if (!files.length) {
-      setLoading(0);
+      setLoading(false);
       setImages([]);
       setImageData([]);
       return;
@@ -56,7 +56,9 @@ const Images = ({ status }) => {
       if (fetched.length === files.length) {
         setImageData(metadata.reverse());
         setImages(fetched.reverse());
-        setLoading(loading - 1);
+      }
+      if (colors.length + fetched.length === color_ids.length + files.length) {
+        setLoading(false);
       }
     });
 
@@ -73,21 +75,23 @@ const Images = ({ status }) => {
           caption: fetchedColor.data.caption,
         });
       }
+      if (colors.length + fetched.length === color_ids.length + files.length) {
+        setLoading(false);
+      }
       if (colors.length === color_ids.length) {
         setColorData(colors);
-        setLoading(loading - 1);
       }
     });
   }, [status]);
 
   useEffect(() => {
-    setLoading(2);
+    setLoading(true);
     fetchImages();
   }, [status, rerender, fetchImages]);
 
   return (
     <div className="d-flex">
-      {loading > 0 ? (
+      {loading ? (
         <div className="d-flex" style={{ width: "100vw", height: "100vh" }}>
           <Spinner
             className="m-auto"
