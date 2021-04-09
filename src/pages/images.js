@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getAll, getColor, getImage } from "../util/api";
 import Image from "../components/image";
+import ImageModal from "../components/imagemodal";
 import { Row, Spinner } from "react-bootstrap";
 
 const Images = ({ status }) => {
@@ -9,6 +10,7 @@ const Images = ({ status }) => {
   const [colorData, setColorData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [rerender, setRerender] = useState(0);
+  const [show, setShow] = useState({});
 
   const fetchImage = async (filename) => {
     // console.log(filename);
@@ -116,6 +118,7 @@ const Images = ({ status }) => {
         >
           {images.map((image, index) => (
             <Image
+              setShow={setShow}
               key={index}
               src={`data:${imageData[index].contentType};base64,${image}`}
               data={imageData[index]}
@@ -125,6 +128,7 @@ const Images = ({ status }) => {
           ))}
           {colorData.map((color, index) => (
             <Image
+              setShow={setShow}
               key={index + images.length}
               color={color.color}
               data={color}
@@ -134,6 +138,7 @@ const Images = ({ status }) => {
           ))}
         </Row>
       )}
+      <ImageModal show={show} setShow={setShow} />
     </div>
   );
 };

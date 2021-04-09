@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 import { Row } from "react-bootstrap";
 import { voteImg } from "../util/api";
+import ColorImg from "./color";
 
 const StyledCard = styled.div`
   border: 2px solid #212529;
@@ -11,18 +12,12 @@ const StyledCard = styled.div`
   background-color: white;
 
   &:hover {
+    cursor: pointer;
     box-shadow: 2px 4px 8px 2px rgba(0, 0, 0, 0.3);
   }
 `;
 
 const StyledImg = styled.img`
-  border-radius: 12px;
-  margin: 20px 20px 0 20px;
-`;
-
-const StyledColor = styled.div`
-  height: 200px;
-  width: 175px;
   border-radius: 12px;
   margin: 20px 20px 0 20px;
 `;
@@ -44,14 +39,21 @@ const StyledVoteBtn = styled.span`
   }
 `;
 
-const Image = ({ src, color, data, rerender, setRerender }) => {
+const Image = ({ src, color, data, rerender, setRerender, setShow }) => {
   const btn_size = 30;
+
   return (
-    <StyledCard>
+    <StyledCard
+      onClick={() => {
+        setShow({ src, color, data });
+      }}
+    >
       {src && !color ? (
         <StyledImg src={src} height={200} />
       ) : (
-        <StyledColor style={{ backgroundColor: color }} />
+        <div style={{ margin: "20px 20px 0 20px" }}>
+          <ColorImg color={color} caption={data.caption} />
+        </div>
       )}
       <Row className="mx-auto my-4 justify-content-center">
         <StyledVoteBtn
