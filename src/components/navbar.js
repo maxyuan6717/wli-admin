@@ -5,7 +5,7 @@ import { GiSandsOfTime } from "react-icons/gi";
 
 const StyledNavLink = styled(NavLink)`
   font-size: 20px;
-  font-weight: 300;
+  font-weight: 400;
   padding: 5px 20px;
   color: #3b57ab;
   transition: color 0.2s;
