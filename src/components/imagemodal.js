@@ -22,7 +22,7 @@ const ImageModal = ({ show, setShow }) => {
     <StyledModal
       size="lg"
       centered
-      show={show.data}
+      show={show.data ? true : false}
       onHide={() => {
         setShow({});
       }}
