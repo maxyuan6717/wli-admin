@@ -64,7 +64,7 @@ const Image = ({ src, color, data, rerender, setRerender, setShow }) => {
             style={{ display: "inline-block", zIndex: 69 }}
             onClick={async (e) => {
               e.stopPropagation();
-              await voteImg(data.filename, "up");
+              await voteImg(data.filename, data.id, "up");
               setRerender(rerender + 1);
             }}
           />
@@ -77,7 +77,7 @@ const Image = ({ src, color, data, rerender, setRerender, setShow }) => {
             style={{ display: "inline-block", zIndex: 69 }}
             onClick={async (e) => {
               e.stopPropagation();
-              await voteImg(data.filename, "down");
+              await voteImg(data.filename, data.id, "down");
               setRerender(rerender + 1);
             }}
           />

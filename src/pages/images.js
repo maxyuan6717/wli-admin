@@ -77,6 +77,7 @@ const Images = ({ status }) => {
       let fetchedColor = await fetchColor(id);
       if (fetchedColor && fetchedColor.data) {
         colors.push({
+          id: id,
           color: fetchedColor.data.color,
           upvoted: fetchedColor.data.upvoted,
           downvoted: fetchedColor.data.downvoted,

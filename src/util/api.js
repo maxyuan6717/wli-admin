@@ -24,7 +24,7 @@ export const getColor = async (id) => {
   return color;
 };
 
-export const voteImg = async (filename, vote) => {
-  let voted = await axios.post(`${Base}/image/vote`, { filename, vote });
+export const voteImg = async (filename, id, vote) => {
+  let voted = await axios.post(`${Base}/image/vote`, { filename, id, vote });
   return voted;
 };
