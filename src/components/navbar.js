@@ -49,7 +49,7 @@ const CustomNav = () => {
         </Nav>
       </Navbar.Collapse>
       <div className="ml-auto my-auto">
-        <a href="https://google.com">
+        <a href="https://capsule.yalewli.org">
           <StyledBrand size={50} />
         </a>
       </div>
