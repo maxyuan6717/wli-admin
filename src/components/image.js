@@ -61,8 +61,9 @@ const Image = ({ src, color, data, rerender, setRerender, setShow }) => {
         >
           <FiThumbsUp
             size={btn_size}
-            style={{ display: "inline-block" }}
-            onClick={async () => {
+            style={{ display: "inline-block", zIndex: 69 }}
+            onClick={async (e) => {
+              e.stopPropagation();
               await voteImg(data.filename, "up");
               setRerender(rerender + 1);
             }}
@@ -73,8 +74,9 @@ const Image = ({ src, color, data, rerender, setRerender, setShow }) => {
         >
           <FiThumbsDown
             size={btn_size}
-            style={{ display: "inline-block" }}
-            onClick={async () => {
+            style={{ display: "inline-block", zIndex: 69 }}
+            onClick={async (e) => {
+              e.stopPropagation();
               await voteImg(data.filename, "down");
               setRerender(rerender + 1);
             }}
