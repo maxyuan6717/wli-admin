@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAll, getColor, getImage } from "../util/api";
+import { getImages } from "../util/api";
 import Image from "../components/image";
 import ImageModal from "../components/imagemodal";
 import { Row, Spinner } from "react-bootstrap";
@@ -7,92 +7,18 @@ import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 
 const Images = ({ status }) => {
   const [images, setImages] = useState([]);
-  const [imageData, setImageData] = useState([]);
-  const [colorData, setColorData] = useState([]);
+  const [netId, setNetId] = useState();
   const [loading, setLoading] = useState(false);
   const [rerender, setRerender] = useState(0);
   const [show, setShow] = useState({});
 
-  const fetchImage = async (filename) => {
-    // console.log(filename);
-    let image = await getImage(filename);
-    return image;
-  };
-
-  const fetchColor = async (id) => {
-    let color = await getColor(id);
-    return color;
-  };
-
   const fetchImages = useCallback(async () => {
-    let data = await getAll(status);
-    data = data.data;
-    const files = data.filenames;
-    const color_ids = data.color_ids;
-
-    // console.log(files);
-    // console.log(color_ids);
-
-    if (!files.length) {
-      setImages([]);
-      setImageData([]);
+    let data = await getImages(status);
+    if (data && data.data && data.data.images) {
+      setImages(data.data.images.reverse());
+      setNetId(data.data.netId);
     }
-
-    if (!color_ids.length) {
-      setColorData([]);
-    }
-
-    if (!files.length && !color_ids.length) {
-      setLoading(false);
-      return;
-    }
-
-    let fetched = [];
-    let metadata = [];
-
-    files.forEach(async (file, index) => {
-      let fetchedImage = await fetchImage(file);
-      if (fetchedImage && fetchedImage.data && fetchedImage.data.data) {
-        fetched.push(fetchedImage.data.data);
-        metadata.push({
-          contentType: fetchedImage.data.contentType,
-          upvoted: fetchedImage.data.upvoted,
-          downvoted: fetchedImage.data.downvoted,
-          tags: fetchedImage.data.tags,
-          caption: fetchedImage.data.caption,
-          filename: file,
-        });
-      }
-      if (fetched.length === files.length) {
-        setImageData(metadata.reverse());
-        setImages(fetched.reverse());
-      }
-      if (colors.length + fetched.length === color_ids.length + files.length) {
-        setLoading(false);
-      }
-    });
-
-    let colors = [];
-
-    color_ids.forEach(async (id) => {
-      let fetchedColor = await fetchColor(id);
-      if (fetchedColor && fetchedColor.data) {
-        colors.push({
-          id: id,
-          color: fetchedColor.data.color,
-          upvoted: fetchedColor.data.upvoted,
-          downvoted: fetchedColor.data.downvoted,
-          tags: fetchedColor.data.tags,
-          caption: fetchedColor.data.caption,
-        });
-      }
-      if (colors.length + fetched.length === color_ids.length + files.length) {
-        setLoading(false);
-      }
-      if (colors.length === color_ids.length) {
-        setColorData(colors);
-      }
-    });
+    setLoading(false);
   }, [status]);
 
   useEffect(() => {
@@ -140,23 +66,16 @@ const Images = ({ status }) => {
               <Image
                 setShow={setShow}
                 key={index}
-                src={`data:${imageData[index].contentType};base64,${image}`}
-                data={imageData[index]}
+                src={image.url}
+                color={image.color === "null" ? null : image.color}
+                data={image}
                 rerender={rerender}
                 setRerender={setRerender}
+                netId={netId}
               />
             ))}
-            {colorData.map((color, index) => (
-              <Image
-                setShow={setShow}
-                key={index + images.length}
-                color={color.color}
-                data={color}
-                rerender={rerender}
-                setRerender={setRerender}
-              />
-            ))}
-            {images.length === 0 && colorData.length === 0 ? (
+
+            {images.length === 0 ? (
               <div style={{ fontWeight: 600, fontSize: "24px", opacity: 0.6 }}>
                 No Submissions
               </div>

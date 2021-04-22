@@ -39,7 +39,7 @@ const StyledVoteBtn = styled.span`
   }
 `;
 
-const Image = ({ src, color, data, rerender, setRerender, setShow }) => {
+const Image = ({ src, color, data, rerender, setRerender, setShow, netId }) => {
   const btn_size = 30;
 
   return (
@@ -57,27 +57,31 @@ const Image = ({ src, color, data, rerender, setRerender, setShow }) => {
       )}
       <Row className="mx-auto my-4 justify-content-center">
         <StyledVoteBtn
-          className={`my-auto mx-4 up ${data.upvoted ? "upped" : ""}`}
+          className={`my-auto mx-4 up ${
+            netId && data.upvotes.includes(netId) ? "upped" : ""
+          }`}
         >
           <FiThumbsUp
             size={btn_size}
             style={{ display: "inline-block", zIndex: 69 }}
             onClick={async (e) => {
               e.stopPropagation();
-              await voteImg(data.filename, data.id, "up");
+              await voteImg(data._id, "up");
               setRerender(rerender + 1);
             }}
           />
         </StyledVoteBtn>
         <StyledVoteBtn
-          className={`my-auto mx-4 down ${data.downvoted ? "downed" : ""}`}
+          className={`my-auto mx-4 down ${
+            netId && data.downvotes.includes(netId) ? "downed" : ""
+          }`}
         >
           <FiThumbsDown
             size={btn_size}
             style={{ display: "inline-block", zIndex: 69 }}
             onClick={async (e) => {
               e.stopPropagation();
-              await voteImg(data.filename, data.id, "down");
+              await voteImg(data._id, "down");
               setRerender(rerender + 1);
             }}
           />
